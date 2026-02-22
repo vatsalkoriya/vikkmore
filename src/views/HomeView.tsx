@@ -36,7 +36,7 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
           <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
             <span className="text-3xl">🎵</span>
           </div>
-          <h2 className="text-2xl font-bold text-foreground">Welcome to Musifly</h2>
+          <h2 className="text-2xl font-bold text-foreground">Welcome to vikkmore</h2>
           <p className="text-muted-foreground">To get started, add your YouTube Data API key in settings.</p>
           <button
             onClick={() => onNavigate("settings")}

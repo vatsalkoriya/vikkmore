@@ -35,7 +35,7 @@ const Sidebar = ({ activeView, onNavigate }: SidebarProps) => {
             <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
               <span className="text-primary-foreground text-sm font-bold">♪</span>
             </div>
-            Musifly
+            vikkmore
           </h1>
         </div>
 
