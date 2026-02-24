@@ -29,68 +29,130 @@ const Sidebar = ({ activeView, onNavigate }: SidebarProps) => {
 
   return (
     <>
-      <aside className="w-64 bg-sidebar flex flex-col h-full shrink-0">
-        <div className="p-6">
+      <aside className="w-20 md:w-64 bg-sidebar flex flex-col h-full shrink-0 transition-all duration-300">
+        
+        {/* Logo */}
+        <div className="p-6 flex items-center justify-center md:justify-start">
           <h1 className="text-2xl font-bold text-foreground tracking-tight flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
               <span className="text-primary-foreground text-sm font-bold">♪</span>
             </div>
-            vikkmore
+            <span className="hidden md:inline">vikkmore</span>
           </h1>
         </div>
 
-        <nav className="px-3 space-y-1">
-          <SidebarItem icon={Home} label="Home" active={activeView === "home"} onClick={() => onNavigate("home")} />
-          <SidebarItem icon={Search} label="Search" active={activeView === "search"} onClick={() => onNavigate("search")} />
-          <SidebarItem icon={Settings} label="API Settings" active={activeView === "settings"} onClick={() => onNavigate("settings")} />
+        {/* Main Navigation */}
+        <nav className="px-2 md:px-3 space-y-1">
+          <SidebarItem
+            icon={Home}
+            label="Home"
+            active={activeView === "home"}
+            onClick={() => onNavigate("home")}
+          />
+          <SidebarItem
+            icon={Search}
+            label="Search"
+            active={activeView === "search"}
+            onClick={() => onNavigate("search")}
+          />
+          <SidebarItem
+            icon={Settings}
+            label="API Settings"
+            active={activeView === "settings"}
+            onClick={() => onNavigate("settings")}
+          />
         </nav>
 
-        <div className="mt-6 px-3 flex-1 overflow-y-auto scrollbar-thin">
-          <div className="flex items-center justify-between px-3 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Your Library</span>
+        {/* Library */}
+        <div className="mt-6 px-2 md:px-3 flex-1 overflow-y-auto scrollbar-thin">
+          
+          {/* Library Header */}
+          <div className="flex items-center justify-center md:justify-between mb-2">
+            <span className="hidden md:inline text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Your Library
+            </span>
             <div className="flex items-center gap-1">
-              <button onClick={() => setShowImport(true)} className="text-muted-foreground hover:text-foreground transition-colors p-1" title="Import YouTube Playlist">
+              <button
+                onClick={() => setShowImport(true)}
+                className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                title="Import Playlist"
+              >
                 <Import className="w-4 h-4" />
               </button>
-              <button onClick={() => setShowCreate(true)} className="text-muted-foreground hover:text-foreground transition-colors p-1" title="Create Playlist">
+              <button
+                onClick={() => setShowCreate(true)}
+                className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                title="Create Playlist"
+              >
                 <Plus className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          <div className="space-y-1">
-            <SidebarItem icon={Heart} label="Liked Songs" active={activeView === "liked"} onClick={() => onNavigate("liked")} />
+          {/* Liked Songs */}
+          <SidebarItem
+            icon={Heart}
+            label="Liked Songs"
+            active={activeView === "liked"}
+            onClick={() => onNavigate("liked")}
+          />
+
+          {/* Playlists */}
+          <div className="space-y-1 mt-2">
             {playlists.map((pl) => (
               <button
                 key={pl.id}
                 onClick={() => onNavigate("playlist", pl.id)}
-                className={`w-full text-left px-3 py-2 rounded-md text-sm truncate transition-colors flex items-center gap-2 ${
-                  activeView === `playlist-${pl.id}` ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent/50"
+                className={`w-full px-3 py-2 rounded-md text-sm truncate transition-colors flex items-center justify-center md:justify-start md:gap-2 ${
+                  activeView === `playlist-${pl.id}`
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent/50"
                 }`}
               >
                 <Music className="w-4 h-4 shrink-0 text-muted-foreground" />
-                <span className="truncate">{pl.name}</span>
+                <span className="hidden md:inline truncate">{pl.name}</span>
               </button>
             ))}
           </div>
         </div>
       </aside>
 
-      <ImportPlaylistModal open={showImport} onClose={() => setShowImport(false)} onImported={handleImported} />
-      <CreatePlaylistModal open={showCreate} onClose={() => setShowCreate(false)} onCreated={handleCreated} />
+      {/* Modals */}
+      <ImportPlaylistModal
+        open={showImport}
+        onClose={() => setShowImport(false)}
+        onImported={handleImported}
+      />
+      <CreatePlaylistModal
+        open={showCreate}
+        onClose={() => setShowCreate(false)}
+        onCreated={handleCreated}
+      />
     </>
   );
 };
 
-const SidebarItem = ({ icon: Icon, label, active, onClick }: { icon: any; label: string; active: boolean; onClick: () => void }) => (
+const SidebarItem = ({
+  icon: Icon,
+  label,
+  active,
+  onClick,
+}: {
+  icon: any;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
-      active ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent/50"
+    className={`w-full flex items-center justify-center md:justify-start md:gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
+      active
+        ? "bg-sidebar-accent text-sidebar-accent-foreground"
+        : "text-sidebar-foreground hover:bg-sidebar-accent/50"
     }`}
   >
     <Icon className="w-5 h-5 shrink-0" />
-    {label}
+    <span className="hidden md:inline">{label}</span>
   </button>
 );
 
