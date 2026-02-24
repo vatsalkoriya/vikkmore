@@ -47,3 +47,9 @@ jobs:
         with:
           name: vikkmore-app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Build APK with Gradle
+        run: |
+          cd android
+          chmod +x gradlew
+          # We add a flag to force dependency resolution for Kotlin
+          ./gradlew assembleDebug -Pandroid.useDuplicateClassNameCheck=false
