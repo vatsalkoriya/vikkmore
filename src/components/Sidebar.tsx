@@ -7,9 +7,11 @@ import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 interface SidebarProps {
   activeView: string;
   onNavigate: (view: string, playlistId?: string) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const Sidebar = ({ activeView, onNavigate }: SidebarProps) => {
+const Sidebar = ({ activeView, onNavigate, isOpen, onClose }: SidebarProps) => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [showImport, setShowImport] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
@@ -17,142 +19,97 @@ const Sidebar = ({ activeView, onNavigate }: SidebarProps) => {
   const refresh = () => setPlaylists(getPlaylists());
   useEffect(refresh, [activeView]);
 
-  const handleImported = (playlistId: string) => {
-    refresh();
-    onNavigate("playlist", playlistId);
-  };
-
-  const handleCreated = (playlistId: string) => {
-    refresh();
-    onNavigate("playlist", playlistId);
-  };
-
   return (
     <>
-      <aside className="w-20 md:w-64 bg-sidebar flex flex-col h-full shrink-0 transition-all duration-300">
+      <aside className={`
+        /* Mobile: Top-down Drawer */
+        fixed top-16 left-0 right-0 z-50 bg-sidebar/95 backdrop-blur-xl
+        border-b border-white/10 transition-all duration-300 ease-in-out overflow-hidden
+        ${isOpen ? "max-h-[80vh] opacity-100 visible" : "max-h-0 opacity-0 invisible md:visible"}
         
-        {/* Logo */}
-        <div className="p-6 flex items-center justify-center md:justify-start">
-          <h1 className="text-2xl font-bold text-foreground tracking-tight flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-              <span className="text-primary-foreground text-sm font-bold">♪</span>
-            </div>
-            <span className="hidden md:inline">vikkmore</span>
-          </h1>
-        </div>
-
-        {/* Main Navigation */}
-        <nav className="px-2 md:px-3 space-y-1">
-          <SidebarItem
-            icon={Home}
-            label="Home"
-            active={activeView === "home"}
-            onClick={() => onNavigate("home")}
-          />
-          <SidebarItem
-            icon={Search}
-            label="Search"
-            active={activeView === "search"}
-            onClick={() => onNavigate("search")}
-          />
-          <SidebarItem
-            icon={Settings}
-            label="API Settings"
-            active={activeView === "settings"}
-            onClick={() => onNavigate("settings")}
-          />
-        </nav>
-
-        {/* Library */}
-        <div className="mt-6 px-2 md:px-3 flex-1 overflow-y-auto scrollbar-thin">
+        /* Desktop: Standard Sidebar */
+        md:relative md:top-0 md:max-h-full md:w-64 md:opacity-100 md:border-r md:border-b-0
+      `}>
+        <div className="p-4 flex flex-col h-full max-w-2xl mx-auto md:max-w-none">
           
-          {/* Library Header */}
-          <div className="flex items-center justify-center md:justify-between mb-2">
-            <span className="hidden md:inline text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Your Library
-            </span>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setShowImport(true)}
-                className="text-muted-foreground hover:text-foreground transition-colors p-1"
-                title="Import Playlist"
-              >
-                <Import className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setShowCreate(true)}
-                className="text-muted-foreground hover:text-foreground transition-colors p-1"
-                title="Create Playlist"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
+          {/* Navigation */}
+          <nav className="space-y-1 mb-6">
+            <SidebarItem 
+              icon={Home} 
+              label="Home" 
+              active={activeView === "home"} 
+              onClick={() => onNavigate("home")} 
+            />
+            <SidebarItem 
+              icon={Search} 
+              label="Search" 
+              active={activeView === "search"} 
+              onClick={() => onNavigate("search")} 
+            />
+            <SidebarItem 
+              icon={Settings} 
+              label="API Settings" 
+              active={activeView === "settings"} 
+              onClick={() => onNavigate("settings")} 
+            />
+          </nav>
+
+          {/* Library Section */}
+          <div className="flex-1 overflow-y-auto min-h-0">
+            <div className="flex items-center justify-between mb-2 px-3">
+              <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Library</span>
+              <div className="flex items-center gap-1">
+                <button onClick={() => setShowImport(true)} className="p-1 hover:text-white transition-colors">
+                  <Import className="w-4 h-4" />
+                </button>
+                <button onClick={() => setShowCreate(true)} className="p-1 hover:text-white transition-colors">
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* Liked Songs */}
-          <SidebarItem
-            icon={Heart}
-            label="Liked Songs"
-            active={activeView === "liked"}
-            onClick={() => onNavigate("liked")}
-          />
+            <SidebarItem 
+              icon={Heart} 
+              label="Liked Songs" 
+              active={activeView === "liked"} 
+              onClick={() => onNavigate("liked")} 
+            />
 
-          {/* Playlists */}
-          <div className="space-y-1 mt-2">
-            {playlists.map((pl) => (
-              <button
-                key={pl.id}
-                onClick={() => onNavigate("playlist", pl.id)}
-                className={`w-full px-3 py-2 rounded-md text-sm truncate transition-colors flex items-center justify-center md:justify-start md:gap-2 ${
-                  activeView === `playlist-${pl.id}`
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                    : "text-sidebar-foreground hover:bg-sidebar-accent/50"
-                }`}
-              >
-                <Music className="w-4 h-4 shrink-0 text-muted-foreground" />
-                <span className="hidden md:inline truncate">{pl.name}</span>
-              </button>
-            ))}
+            <div className="mt-2 space-y-1">
+              {playlists.map((pl) => (
+                <button
+                  key={pl.id}
+                  onClick={() => onNavigate("playlist", pl.id)}
+                  className={`w-full px-3 py-2 rounded-md text-sm truncate flex items-center gap-3 transition-all ${
+                    activeView === `playlist-${pl.id}`
+                      ? "bg-primary/20 text-primary font-medium"
+                      : "text-muted-foreground hover:bg-white/5"
+                  }`}
+                >
+                  <Music className="w-4 h-4 shrink-0" />
+                  <span className="truncate">{pl.name}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </aside>
 
-      {/* Modals */}
-      <ImportPlaylistModal
-        open={showImport}
-        onClose={() => setShowImport(false)}
-        onImported={handleImported}
-      />
-      <CreatePlaylistModal
-        open={showCreate}
-        onClose={() => setShowCreate(false)}
-        onCreated={handleCreated}
-      />
+      <ImportPlaylistModal open={showImport} onClose={() => setShowImport(false)} onImported={refresh} />
+      <CreatePlaylistModal open={showCreate} onClose={() => setShowCreate(false)} onCreated={refresh} />
     </>
   );
 };
 
-const SidebarItem = ({
-  icon: Icon,
-  label,
-  active,
-  onClick,
-}: {
-  icon: any;
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) => (
+const SidebarItem = ({ icon: Icon, label, active, onClick }: any) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center justify-center md:justify-start md:gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
-      active
-        ? "bg-sidebar-accent text-sidebar-accent-foreground"
-        : "text-sidebar-foreground hover:bg-sidebar-accent/50"
+    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all ${
+      active ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"
     }`}
   >
     <Icon className="w-5 h-5 shrink-0" />
-    <span className="hidden md:inline">{label}</span>
+    <span>{label}</span>
   </button>
 );
 
