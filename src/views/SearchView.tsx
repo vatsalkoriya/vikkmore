@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { searchYouTube } from "@/lib/youtube";
 import type { Song } from "@/lib/storage";
 import SongRow from "@/components/SongRow";
+import PageSEO from "@/components/SEO/PageSEO";
 
 const SearchView = () => {
   const [query, setQuery] = useState("");
@@ -25,6 +26,12 @@ const SearchView = () => {
 
   return (
     <div className="p-6 h-full overflow-y-auto scrollbar-thin">
+      <PageSEO 
+        title="Search Music - Vikkmore YouTube Music Player"
+        description="Search millions of songs on YouTube with Vikkmore. Find your favorite tracks, artists, and create custom playlists instantly."
+        keywords="search music, find songs, youtube search, music discovery, vikkmore search, song finder, artist search"
+      />
+      
       <form onSubmit={handleSearch} className="mb-6">
         <div className="relative max-w-lg">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />

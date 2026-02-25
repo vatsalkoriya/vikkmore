@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Music2, X } from "lucide-react";
 import { InstallPWA } from "./components/InstallPWA";
+import SEOHead from "./components/SEOHead";
 
 // Context & Providers
 import { PlayerProvider, usePlayer } from "@/context/PlayerContext";
@@ -42,6 +43,9 @@ const AppLayout = () => {
 
   return (
     <div className="flex h-screen bg-black text-white overflow-hidden flex-col">
+      {/* SEO Head Component */}
+      <SEOHead />
+      
       {/* 1. THE YOUTUBE PLAYER ENGINE */}
       <YouTubePlayer />
       
