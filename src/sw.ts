@@ -67,6 +67,21 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting()
   }
+  
+  // Handle playback control messages
+  if (event.data && event.data.type === 'PLAYBACK_CONTROL') {
+    console.log('Service worker received playback control:', event.data.action)
+    // Forward to all clients
+    self.clients.matchAll().then(clients => {
+      clients.forEach(client => {
+        client.postMessage({
+          type: 'PLAYBACK_STATUS',
+          action: event.data.action,
+          timestamp: Date.now()
+        })
+      })
+    })
+  }
 })
 
 // Handle media session events
@@ -74,8 +89,31 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim())
 })
 
+// Keep service worker alive for background playback
+self.addEventListener('install', (event) => {
+  console.log('Service worker installed for background audio support')
+})
+
 // Prevent service worker from being terminated during playback
 self.addEventListener('fetch', (event) => {
   // Allow all fetch requests to proceed normally
   // This ensures YouTube player continues to work
 })
+
+// Handle background sync for playback state
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'background-playback-sync') {
+    console.log('Background sync for playback')
+    // This could be used to maintain playback state
+  }
+})
+
+// Keep service worker active
+setInterval(() => {
+  // Send a message to keep the service worker alive
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage({ type: 'KEEP_ALIVE' })
+    })
+  })
+}, 30000) // Every 30 seconds
