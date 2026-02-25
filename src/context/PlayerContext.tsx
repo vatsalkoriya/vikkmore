@@ -65,8 +65,11 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const p = playerRef.current;
     if (!p) return;
     setState((s) => {
-      if (s.isPlaying) p.pauseVideo?.();
-      else p.playVideo?.();
+      if (s.isPlaying) {
+        p.pauseVideo?.();
+      } else {
+        p.playVideo?.();
+      }
       return { ...s, isPlaying: !s.isPlaying };
     });
   }, []);
@@ -100,6 +103,11 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     playerRef.current?.seekTo?.(seconds, true);
     setState((s) => ({ ...s, progress: seconds }));
   }, []);
+
+  // Sync player volume when state volume changes
+  useEffect(() => {
+    playerRef.current?.setVolume?.(state.volume);
+  }, [state.volume]);
 
   useEffect(() => {
     startProgressTracking();

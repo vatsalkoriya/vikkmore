@@ -27,6 +27,7 @@ export default defineConfig(({ mode }) => ({
         background_color: "#000000",
         display: "standalone",
         start_url: "/",
+        categories: ["music", "entertainment"],
         icons: [
           {
             src: "/icon-192.png",
@@ -39,6 +40,14 @@ export default defineConfig(({ mode }) => ({
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable"
+          }
+        ],
+        screenshots: [
+          {
+            src: "/icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            form_factor: "wide"
           }
         ]
       },
