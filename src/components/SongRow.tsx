@@ -27,27 +27,33 @@ const SongRow = ({ song, index, queue, onLikeChange }: SongRowProps) => {
   return (
     <div
       onClick={() => playSong(song, queue)}
-      className={`group flex items-center gap-4 px-4 py-2.5 rounded-md cursor-pointer transition-colors ${
+      className={`group flex items-center gap-3 px-4 py-1.5 rounded-md cursor-pointer transition-colors ${
         isActive ? "bg-accent" : "hover:bg-accent/50"
       }`}
     >
-      <div className="w-8 text-center">
-        <span className="group-hover:hidden text-sm text-muted-foreground">{index + 1}</span>
-        <Play className="w-4 h-4 hidden group-hover:block mx-auto text-foreground" />
+      <div className="w-6 text-center">
+        <span className="group-hover:hidden text-xs text-muted-foreground">{index + 1}</span>
+        <Play className="w-3.5 h-3.5 hidden group-hover:block mx-auto text-foreground" />
       </div>
 
-      <img src={song.thumbnail} alt="" className="w-10 h-10 rounded object-cover" />
+      <img src={song.thumbnail} alt="" className="w-9 h-9 rounded object-cover" />
 
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium truncate ${isActive ? "text-primary" : "text-foreground"}`}>{song.title}</p>
-        <p className="text-xs text-muted-foreground truncate">{song.artist}</p>
+        <p
+          className={`text-sm font-medium whitespace-normal break-words leading-snug ${
+            isActive ? "text-primary" : "text-foreground"
+          }`}
+        >
+          {song.title}
+        </p>
+        <p className="text-xs text-muted-foreground whitespace-normal break-words leading-snug">
+          Song · {song.artist}
+        </p>
       </div>
 
       <button onClick={handleLike} className="opacity-0 group-hover:opacity-100 transition-opacity">
         <Heart className={`w-4 h-4 ${liked ? "fill-primary text-primary" : "text-muted-foreground hover:text-foreground"}`} />
       </button>
-
-      <span className="text-xs text-muted-foreground w-12 text-right">{song.duration}</span>
 
       <div className="relative">
         <button
