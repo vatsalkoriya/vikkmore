@@ -39,27 +39,26 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
     
     <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Vikkmore",
-      "url": "https://vikkmore.vercel.app/",
-      "description": "Free YouTube music player with playlist management and ad-free streaming",
-      "applicationCategory": "Music",
-      "operatingSystem": "All",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "1000"
-      }
-    }
-    <script type="application/ld+json">
+<!-- WebApplication Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Vikkmore",
+  "url": "https://vikkmore.vercel.app/",
+  "description": "Free YouTube music player with playlist management and ad-free streaming",
+  "applicationCategory": "Music",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+<!-- WebSite Schema (VERY IMPORTANT for site name) -->
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -68,7 +67,6 @@
   "url": "https://vikkmore.vercel.app/"
 }
 </script>
-    </script>
   </head>
 
   <body>
