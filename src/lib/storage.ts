@@ -113,11 +113,12 @@ export const setClerkUserId = (clerkId: string) => {
   if (typeof window === 'undefined') return;
   const current = localStorage.getItem(USER_ID_KEY);
   if (current !== clerkId) {
-    // User changed — reset cache so library reloads for new user
     localStorage.setItem(USER_ID_KEY, clerkId);
     cache = { ...EMPTY_LIBRARY };
     cacheReady = false;
     pendingLoad = null;
+    // Notify all subscribers to re-fetch with the new user's data
+    window.dispatchEvent(new Event(STORAGE_SYNC_EVENT));
   }
 };
 
@@ -170,6 +171,7 @@ export const loadUserLibrary = async (force = false): Promise<UserLibraryData> =
       likedSongs: [...legacy.likedSongs, ...remote.likedSongs],
       playlists: [...remote.playlists, ...legacy.playlists],
       recentSongs: [...legacy.recentSongs, ...remote.recentSongs],
+      apiKey: remote.apiKey || legacy.apiKey || "",
     });
 
     cache = merged;
