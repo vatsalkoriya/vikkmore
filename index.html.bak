@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Vikkmore - Free YouTube Music Player & Playlist Manager</title>
+    <meta name="description" content="Vikkmore is the best free YouTube music player with playlist management. Stream millions of songs, create custom playlists, and enjoy ad-free music experience. No downloads required." />
+    <meta name="keywords" content="vikkmore, youtube music player, free music streaming, playlist manager, online music player, youtube audio, music streaming service, create playlists, music library" />
+    <meta name="author" content="Vikkmore" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#000000" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vikkmore.vercel.app/" />
+    <meta property="og:title" content="Vikkmore - Free YouTube Music Player & Playlist Manager" />
+    <meta property="og:description" content="Stream millions of songs for free with Vikkmore. Create playlists, manage your music library, and enjoy uninterrupted music playback." />
+    <meta property="og:image" content="https://vikkmore.vercel.app/icon-512.png" />
+    <meta property="og:site_name" content="Vikkmore" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://vikkmore.vercel.app/" />
+    <meta property="twitter:title" content="Vikkmore - Free YouTube Music Player & Playlist Manager" />
+    <meta property="twitter:description" content="Stream millions of songs for free with Vikkmore. Create playlists, manage your music library, and enjoy uninterrupted music playback." />
+    <meta property="twitter:image" content="https://vikkmore.vercel.app/icon-512.png" />
+    <meta property="twitter:site" content="@vikkmore" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vikkmore.vercel.app/" />
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+    
+    <!-- Structured Data -->
+<!-- WebApplication Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Vikkmore",
+  "url": "https://vikkmore.vercel.app/",
+  "description": "Free YouTube music player with playlist management and ad-free streaming",
+  "applicationCategory": "Music",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+<!-- WebSite Schema (VERY IMPORTANT for site name) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Vikkmore",
+  "alternateName": "Vikkmore Music Player",
+  "url": "https://vikkmore.vercel.app/"
+}
+</script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

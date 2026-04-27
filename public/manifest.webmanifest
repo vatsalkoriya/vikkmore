@@ -1,0 +1,34 @@
+{
+  "name": "Vikkmore - Free YouTube Music Player & Playlist Manager",
+  "short_name": "Vikkmore",
+  "description": "Stream millions of songs for free with Vikkmore. Create custom playlists, manage your music library, and enjoy ad-free music experience with our YouTube music player.",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone",
+  "start_url": "/",
+  "categories": ["music", "entertainment", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}
