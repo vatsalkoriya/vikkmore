@@ -40,7 +40,6 @@ export default function RootLayout({
           <link rel="apple-touch-icon" href="/icon-192.png" />
           <meta name="mobile-web-app-capable" content="yes" />
         </head>
-        </head>
         <body className={`${outfit.variable} font-outfit bg-black text-white antialiased overflow-hidden`}>
           <Providers>
             <AppShell>{children}</AppShell>
