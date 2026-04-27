@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Music2, X, LogIn, UserPlus } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import PlayerBar from "@/components/PlayerBar"; 
@@ -9,13 +9,21 @@ import MediaSession from "@/components/MediaSession";
 import { usePathname, useRouter } from "next/navigation";
 import { InstallPWA } from "@/components/InstallPWA";
 import SEOHead from "@/components/SEOHead";
-import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, Show, UserButton, useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import { setClerkUserId } from "@/lib/storage";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { user, isLoaded } = useUser();
+
+  useEffect(() => {
+    if (isLoaded && user?.id) {
+      setClerkUserId(user.id);
+    }
+  }, [isLoaded, user?.id]);
 
   const handleNavigate = (view: string, id?: string) => {
     setIsSidebarOpen(false); 
