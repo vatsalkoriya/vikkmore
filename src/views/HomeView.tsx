@@ -24,7 +24,12 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
 
   useEffect(() => {
     setMounted(true);
-    setHasKey(!!getApiKey());
+    const checkKey = async () => {
+      const key = await getApiKey();
+      if (mounted) setHasKey(!!key);
+    };
+    checkKey();
+
     const h = new Date().getHours();
     if (h < 12) setGreetingText("Good morning");
     else if (h < 18) setGreetingText("Good afternoon");
@@ -42,6 +47,10 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
     void loadRecent();
     const unsubscribe = subscribeToLibraryChanges(() => {
       void loadRecent();
+      void (async () => {
+        const key = await getApiKey();
+        if (mounted) setHasKey(!!key);
+      })();
     });
 
     if (hasKey) {
