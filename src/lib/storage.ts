@@ -163,29 +163,40 @@ export const loadUserLibrary = async (force = false): Promise<UserLibraryData> =
   const userId = ensureUserId();
 
   pendingLoad = (async () => {
-    const remote = normalizeLibrary(
-      await request<Partial<UserLibraryData>>(`/api/user-data?userId=${encodeURIComponent(userId)}`)
-    );
-    const legacy = readLegacyLibrary();
-    const merged = normalizeLibrary({
-      likedSongs: [...legacy.likedSongs, ...remote.likedSongs],
-      playlists: [...remote.playlists, ...legacy.playlists],
-      recentSongs: [...legacy.recentSongs, ...remote.recentSongs],
-      apiKey: remote.apiKey || legacy.apiKey || "",
-    });
+    try {
+      const remote = normalizeLibrary(
+        await request<Partial<UserLibraryData>>(`/api/user-data?userId=${encodeURIComponent(userId)}`)
+      );
+      const legacy = readLegacyLibrary();
+      const merged = normalizeLibrary({
+        likedSongs: [...legacy.likedSongs, ...remote.likedSongs],
+        playlists: [...remote.playlists, ...legacy.playlists],
+        recentSongs: [...legacy.recentSongs, ...remote.recentSongs],
+        apiKey: remote.apiKey || legacy.apiKey || "",
+      });
 
-    cache = merged;
-    cacheReady = true;
+      cache = merged;
+      cacheReady = true;
 
-    const hasLegacyData =
-      legacy.likedSongs.length > 0 || legacy.playlists.length > 0 || legacy.recentSongs.length > 0;
+      const hasLegacyData =
+        legacy.likedSongs.length > 0 || legacy.playlists.length > 0 || legacy.recentSongs.length > 0;
 
-    if (hasLegacyData) {
-      await saveRemoteLibrary(cache);
-      clearLegacyLibrary();
+      if (hasLegacyData) {
+        await saveRemoteLibrary(cache).catch((err) =>
+          console.error("Failed to sync migrated data to remote", err)
+        );
+        clearLegacyLibrary();
+      }
+
+      return cache;
+    } catch (error) {
+      console.error("Failed to load user library from remote, falling back to local", error);
+      // Fallback to legacy data only
+      const legacy = readLegacyLibrary();
+      cache = legacy;
+      cacheReady = true;
+      return cache;
     }
-
-    return cache;
   })();
 
   try {
@@ -199,7 +210,11 @@ const updateLibrary = async (updater: (current: UserLibraryData) => UserLibraryD
   const current = await loadUserLibrary();
   const next = normalizeLibrary(updater(current));
   cache = next;
-  await saveRemoteLibrary(next);
+  try {
+    await saveRemoteLibrary(next);
+  } catch (error) {
+    console.error("Failed to sync library update to remote", error);
+  }
   emitLibrarySync();
   return next;
 };

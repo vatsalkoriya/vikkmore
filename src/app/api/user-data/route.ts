@@ -6,6 +6,16 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
 
+    if (!process.env.MONGODB_URI) {
+      return NextResponse.json({
+        likedSongs: [],
+        playlists: [],
+        recentSongs: [],
+        apiKey: "",
+        syncDisabled: true,
+      });
+    }
+
     if (!userId || typeof userId !== "string") {
       return NextResponse.json({ error: "userId is required" }, { status: 400 });
     }
@@ -23,9 +33,12 @@ export async function GET(request: Request) {
       recentSongs: doc?.recentSongs || [],
       apiKey: doc?.apiKey || "",
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("user-data api error (GET)", error);
-    return NextResponse.json({ error: "Failed to process library request" }, { status: 500 });
+    return NextResponse.json(
+      { error: error?.message || "Failed to process library request" },
+      { status: 500 }
+    );
   }
 }
 
@@ -33,6 +46,10 @@ export async function PUT(request: Request) {
   try {
     const body = await request.json();
     const userId = body?.userId;
+
+    if (!process.env.MONGODB_URI) {
+      return NextResponse.json({ ok: true, syncDisabled: true });
+    }
 
     if (!userId || typeof userId !== "string") {
       return NextResponse.json({ error: "userId is required" }, { status: 400 });
@@ -67,8 +84,11 @@ export async function PUT(request: Request) {
     );
 
     return NextResponse.json({ ok: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error("user-data api error (PUT)", error);
-    return NextResponse.json({ error: "Failed to process library request" }, { status: 500 });
+    return NextResponse.json(
+      { error: error?.message || "Failed to process library request" },
+      { status: 500 }
+    );
   }
 }

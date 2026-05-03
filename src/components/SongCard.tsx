@@ -1,6 +1,8 @@
 import { Play } from "lucide-react";
 import type { Song } from "@/lib/storage";
 import { usePlayer } from "@/context/PlayerContext";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 interface SongCardProps {
   song: Song;
@@ -9,10 +11,20 @@ interface SongCardProps {
 
 const SongCard = ({ song, queue }: SongCardProps) => {
   const { playSong } = usePlayer();
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (!isSignedIn) {
+      router.push("/sign-in");
+      return;
+    }
+    playSong(song, queue);
+  };
 
   return (
     <div
-      onClick={() => playSong(song, queue)}
+      onClick={handleClick}
       className="group bg-card hover:bg-accent/60 rounded-lg p-4 cursor-pointer transition-all duration-200"
     >
       <div className="relative mb-4">

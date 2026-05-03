@@ -4,6 +4,9 @@ import { isLiked, toggleLike, getPlaylists, addToPlaylist, subscribeToLibraryCha
 import { usePlayer } from "@/context/PlayerContext";
 import { useEffect, useState } from "react";
 
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+
 interface SongRowProps {
   song: Song;
   index: number;
@@ -13,6 +16,8 @@ interface SongRowProps {
 
 const SongRow = ({ song, index, queue, onLikeChange }: SongRowProps) => {
   const { playSong, currentSong } = usePlayer();
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
   const [liked, setLiked] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -46,9 +51,17 @@ const SongRow = ({ song, index, queue, onLikeChange }: SongRowProps) => {
     onLikeChange?.();
   };
 
+  const handleClick = () => {
+    if (!isSignedIn) {
+      router.push("/sign-in");
+      return;
+    }
+    playSong(song, queue);
+  };
+
   return (
     <div
-      onClick={() => playSong(song, queue)}
+      onClick={handleClick}
       className={`group flex items-center gap-3 px-4 py-1.5 rounded-md cursor-pointer transition-colors ${
         isActive ? "bg-accent" : "hover:bg-accent/50"
       }`}
