@@ -7,15 +7,16 @@ import { useRouter } from "next/navigation";
 interface SongCardProps {
   song: Song;
   queue?: Song[];
+  skipAuth?: boolean;
 }
 
-const SongCard = ({ song, queue }: SongCardProps) => {
+const SongCard = ({ song, queue, skipAuth }: SongCardProps) => {
   const { playSong } = usePlayer();
   const { isSignedIn } = useAuth();
   const router = useRouter();
 
   const handleClick = () => {
-    if (!isSignedIn) {
+    if (!isSignedIn && !skipAuth) {
       router.push("/sign-in");
       return;
     }

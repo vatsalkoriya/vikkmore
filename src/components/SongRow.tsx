@@ -12,9 +12,10 @@ interface SongRowProps {
   index: number;
   queue?: Song[];
   onLikeChange?: () => void;
+  skipAuth?: boolean;
 }
 
-const SongRow = ({ song, index, queue, onLikeChange }: SongRowProps) => {
+const SongRow = ({ song, index, queue, onLikeChange, skipAuth }: SongRowProps) => {
   const { playSong, currentSong } = usePlayer();
   const { isSignedIn } = useAuth();
   const router = useRouter();
@@ -52,7 +53,7 @@ const SongRow = ({ song, index, queue, onLikeChange }: SongRowProps) => {
   };
 
   const handleClick = () => {
-    if (!isSignedIn) {
+    if (!isSignedIn && !skipAuth) {
       router.push("/sign-in");
       return;
     }

@@ -31,9 +31,9 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
     checkKey();
 
     const h = new Date().getHours();
-    if (h < 12) setGreetingText("Good morning");
-    else if (h < 18) setGreetingText("Good afternoon");
-    else setGreetingText("Good evening");
+    if (h < 12) setGreetingText("Good Listening");
+    else if (h < 18) setGreetingText("Good Listening");
+    else setGreetingText("Good Listening");
   }, []);
 
   useEffect(() => {
@@ -139,7 +139,7 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
           <h2 className="text-lg md:text-xl font-bold text-foreground mb-4">Trending Songs</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
             {SAMPLE_SONGS.map((song) => (
-              <SongCard key={song.id} song={song} queue={SAMPLE_SONGS} />
+              <SongCard key={song.id} song={song} queue={SAMPLE_SONGS} skipAuth={true} />
             ))}
           </div>
         </section>
@@ -202,7 +202,13 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
         ) : (
           <div className="space-y-1">
             {trending.map((song, i) => (
-              <SongRow key={song.id} song={song} index={i} queue={trending} />
+              <SongRow 
+                key={song.id} 
+                song={song} 
+                index={i} 
+                queue={trending} 
+                skipAuth={!hasKey} 
+              />
             ))}
           </div>
         )}
