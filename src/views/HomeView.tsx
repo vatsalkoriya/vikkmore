@@ -70,6 +70,10 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
       }).finally(() => {
         if (mounted) setLoading(false);
       });
+    } else {
+      setTrending(SAMPLE_SONGS.slice(0, 10));
+      setPopularPlaylists([]);
+      setPopularSongs([]);
     }
 
     return () => {
