@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Music2, X, LogIn, UserPlus, LayoutSidebar } from "lucide-react";
+import { Music2, X, LogIn, UserPlus, PanelLeft } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
 import PlayerBar from "@/components/PlayerBar"; 
 import YouTubePlayer from "@/components/YouTubePlayer";
@@ -47,7 +47,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 group active:scale-95 transition-transform md:hidden"
           >
             <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isSidebarOpen ? 'bg-white text-black' : 'bg-primary text-primary-foreground'}`}>
-              {isSidebarOpen ? <X className="w-5 h-5" /> : <LayoutSidebar className="w-5 h-5" />}
+              {isSidebarOpen ? <X className="w-5 h-5" /> : <PanelLeft className="w-5 h-5" />}
             </div>
             <span className="font-bold text-xl tracking-tighter">vikkmore</span>
           </button>

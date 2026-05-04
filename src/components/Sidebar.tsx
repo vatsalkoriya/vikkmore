@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Search, Heart, Plus, Settings, Import, Music, Download, User, LogOut, Info, Mail, Menu, LayoutSidebar } from "lucide-react";
+import { Home, Search, Heart, Plus, Settings, Import, Music, Download, User, LogOut, Info, Mail, Menu, PanelLeft } from "lucide-react";
 import { Show, SignOutButton } from "@clerk/nextjs";
 import { getPlaylists, subscribeToLibraryChanges, type Playlist } from "@/lib/storage";
 import { useState, useEffect } from "react";
@@ -86,7 +86,7 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }: SidebarProps) => {
           {/* Logo - Desktop Only */}
           <div className="hidden md:flex items-center gap-3 px-3 mb-10">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-              <LayoutSidebar className="w-5 h-5" />
+              <PanelLeft className="w-5 h-5" />
             </div>
             <span className="font-bold text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">vikkmore</span>
           </div>
