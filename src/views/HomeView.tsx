@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { Trash2 } from "lucide-react";
 import { getTrendingMusic } from "@/lib/youtube";
-import { getRecentSongs, getApiKey, subscribeToLibraryChanges, type Song } from "@/lib/storage";
+import { 
+  getRecentSongs, 
+  getApiKey, 
+  subscribeToLibraryChanges, 
+  clearRecentSongs, 
+  removeFromRecent, 
+  type Song 
+} from "@/lib/storage";
 import SongCard from "@/components/SongCard";
 import SongRow from "@/components/SongRow";
 import PlaylistCard from "@/components/PlaylistCard";
@@ -22,11 +31,13 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
   const [hasKey, setHasKey] = useState(false);
   const [greetingText, setGreetingText] = useState("");
 
+  const { user, isLoaded, isSignedIn } = useUser();
+
   useEffect(() => {
     setMounted(true);
     const checkKey = async () => {
       const key = await getApiKey();
-      if (mounted) setHasKey(!!key);
+      setHasKey(!!key);
     };
     checkKey();
 
@@ -37,11 +48,11 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
   }, []);
 
   useEffect(() => {
-    let mounted = true;
+    let isSubscribed = true;
 
     const loadRecent = async () => {
       const nextRecent = await getRecentSongs();
-      if (mounted) setRecent(nextRecent);
+      if (isSubscribed) setRecent(nextRecent);
     };
 
     void loadRecent();
@@ -49,7 +60,7 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
       void loadRecent();
       void (async () => {
         const key = await getApiKey();
-        if (mounted) setHasKey(!!key);
+        if (isSubscribed) setHasKey(!!key);
       })();
     });
 
@@ -60,7 +71,7 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
         searchYouTubePlaylists("Music Playlists 2024"),
         searchYouTube("Top Global Songs 2024")
       ]).then(([trendingData, playlistData, popularData]) => {
-        if (mounted) {
+        if (isSubscribed) {
           setTrending(trendingData);
           setPopularPlaylists(playlistData.slice(0, 10));
           setPopularSongs(popularData.slice(0, 10));
@@ -68,7 +79,7 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
       }).catch(err => {
         console.error("Failed to fetch home content", err);
       }).finally(() => {
-        if (mounted) setLoading(false);
+        if (isSubscribed) setLoading(false);
       });
     } else {
       setTrending(SAMPLE_SONGS.slice(0, 10));
@@ -77,7 +88,7 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
     }
 
     return () => {
-      mounted = false;
+      isSubscribed = false;
       unsubscribe();
     };
   }, [hasKey]);
@@ -108,10 +119,24 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
 
       {recent.length > 0 && (
         <section>
-          <h2 className="text-lg md:text-xl font-bold text-foreground mb-4">Recently Played</h2>
+          <div className="flex items-center justify-between mb-4 px-1">
+            <h2 className="text-lg md:text-xl font-bold text-foreground">Recently Played</h2>
+            <button 
+              onClick={() => clearRecentSongs()}
+              className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-destructive transition-colors"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Clear all</span>
+            </button>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
             {recent.slice(0, 10).map((song) => (
-              <SongCard key={song.id} song={song} queue={recent} />
+              <SongCard 
+                key={song.id} 
+                song={song} 
+                queue={recent} 
+                onDelete={() => removeFromRecent(song.id)}
+              />
             ))}
           </div>
         </section>
@@ -120,15 +145,19 @@ const HomeView = ({ onNavigate }: HomeViewProps) => {
       {!hasKey && (
         <section>
           <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 md:p-6 mb-8">
-            <h2 className="text-lg md:text-xl font-bold text-primary mb-2">Guest Mode</h2>
+            <h2 className="text-lg md:text-xl font-bold text-primary mb-2">
+              {isSignedIn ? "API Key Required" : "Guest Mode"}
+            </h2>
             <p className="text-sm text-muted-foreground mb-4">
-              You're currently in guest mode. Add a YouTube API key in settings to unlock full search and trending features.
+              {isSignedIn 
+                ? "Add a YouTube API key in settings to unlock full search, trending features, and personalized playlists." 
+                : "You're currently in guest mode. Sign up and add a YouTube API key in settings to unlock full search and trending features."}
             </p>
             <button
               onClick={() => onNavigate("settings")}
               className="text-xs font-semibold bg-primary text-primary-foreground px-4 py-2 rounded-full hover:bg-primary/90 transition-colors"
             >
-              Add API Key
+              {isSignedIn ? "Add API Key" : "Go to Settings"}
             </button>
           </div>
         </section>

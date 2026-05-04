@@ -318,6 +318,20 @@ export const addToRecent = async (song: Song) => {
   }));
 };
 
+export const clearRecentSongs = async () => {
+  await updateLibrary((current) => ({
+    ...current,
+    recentSongs: [],
+  }));
+};
+
+export const removeFromRecent = async (songId: string) => {
+  await updateLibrary((current) => ({
+    ...current,
+    recentSongs: current.recentSongs.filter((song) => song.id !== songId),
+  }));
+};
+
 export const getApiKey = async (): Promise<string> => {
   const library = await loadUserLibrary();
   // fallback to localStorage for legacy

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Trash2, X } from "lucide-react";
 import {
   searchYouTube,
   searchYouTubePlaylists,
@@ -9,7 +9,13 @@ import {
   searchYouTubeChannelPlaylists,
   getYouTubePlaylistSongs,
 } from "@/lib/youtube";
-import type { Song } from "@/lib/storage";
+import { 
+  getRecentSongs, 
+  clearRecentSongs, 
+  removeFromRecent, 
+  subscribeToLibraryChanges, 
+  type Song 
+} from "@/lib/storage";
 import SongRow from "@/components/SongRow";
 import PageSEO from "@/components/SEO/PageSEO";
 import type { PlaylistResult, ArtistResult, AlbumResult } from "@/lib/youtube";
@@ -31,6 +37,17 @@ const SearchView = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"songs" | "playlists" | "artists" | "albums">("songs");
   const [lastQuery, setLastQuery] = useState("");
+  const [recent, setRecent] = useState<Song[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadRecent = async () => {
+      const nextRecent = await getRecentSongs();
+      if (mounted) setRecent(nextRecent);
+    };
+    loadRecent();
+    return subscribeToLibraryChanges(loadRecent);
+  }, []);
 
   const fetchTabResults = async (tab: "songs" | "playlists" | "artists" | "albums", q: string) => {
     setLoading(true);
@@ -165,6 +182,30 @@ const SearchView = () => {
             {results.map((song, i) => (
               <SongRow key={song.id} song={song} index={i} queue={results} />
             ))}
+          </div>
+        ) : recent.length > 0 ? (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-1">
+              <h2 className="text-lg font-bold text-foreground">Recent Searches</h2>
+              <button 
+                onClick={() => clearRecentSongs()}
+                className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-destructive transition-colors group"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Clear all</span>
+              </button>
+            </div>
+            <div className="space-y-1">
+              {recent.map((song, i) => (
+                <SongRow 
+                  key={song.id} 
+                  song={song} 
+                  index={i} 
+                  queue={recent} 
+                  onDelete={() => removeFromRecent(song.id)}
+                />
+              ))}
+            </div>
           </div>
         ) : (
           <div className="text-center text-muted-foreground mt-20">

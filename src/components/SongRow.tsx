@@ -1,4 +1,4 @@
-import { Play, Heart, MoreHorizontal, Plus } from "lucide-react";
+import { Play, Heart, MoreHorizontal, Plus, Trash2 } from "lucide-react";
 import type { Song } from "@/lib/storage";
 import { isLiked, toggleLike, getPlaylists, addToPlaylist, subscribeToLibraryChanges, type Playlist } from "@/lib/storage";
 import { usePlayer } from "@/context/PlayerContext";
@@ -12,10 +12,11 @@ interface SongRowProps {
   index: number;
   queue?: Song[];
   onLikeChange?: () => void;
+  onDelete?: () => void;
   skipAuth?: boolean;
 }
 
-const SongRow = ({ song, index, queue, onLikeChange, skipAuth }: SongRowProps) => {
+const SongRow = ({ song, index, queue, onLikeChange, onDelete, skipAuth }: SongRowProps) => {
   const { playSong, currentSong } = usePlayer();
   const { isSignedIn } = useAuth();
   const router = useRouter();
@@ -91,7 +92,16 @@ const SongRow = ({ song, index, queue, onLikeChange, skipAuth }: SongRowProps) =
         <Heart className={`w-4 h-4 ${liked ? "fill-primary text-primary" : "text-muted-foreground hover:text-foreground"}`} />
       </button>
 
-      <div className="relative">
+      <div className="relative flex items-center gap-2">
+        {onDelete && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive p-1"
+            title="Remove from history"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        )}
         <button
           onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu); }}
           className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
