@@ -115,6 +115,12 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }: SidebarProps) => {
               active={activeView === "/settings"} 
               onClick={() => onNavigate("settings")} 
             />
+            <SidebarItem 
+              icon={Info} 
+              label="About" 
+              active={activeView === "/about"} 
+              onClick={() => onNavigate("about")} 
+            />
             
             {/* Install App Button - Only show if not installed and prompt is available */}
             {!isInstalled && deferredPrompt && (
@@ -170,17 +176,42 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }: SidebarProps) => {
             </div>
           </div>
 
-          {/* Bottom Actions */}
-          <Show when="signed-in">
-            <div className="pt-4 mt-4 border-t border-white/10 shrink-0">
+          {/* Sidebar Footer */}
+          <div className="pt-4 mt-4 border-t border-white/10 shrink-0 space-y-4">
+            <div className="px-3 py-2">
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-2">Developed By</p>
+              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                  <User className="w-3.5 h-3.5 text-primary" />
+                </div>
+                <span>Vatsal Koriya</span>
+              </div>
+              <a 
+                href="mailto:vikkuploads@gmail.com" 
+                className="flex items-center gap-2 mt-2 text-xs text-muted-foreground hover:text-primary transition-colors group"
+              >
+                <Mail className="w-3.5 h-3.5" />
+                <span className="group-hover:underline">vikkuploads@gmail.com</span>
+              </a>
+            </div>
+
+            <Show when="signed-in">
               <SignOutButton>
                 <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-destructive/90 hover:text-destructive hover:bg-destructive/10 transition-colors">
                   <LogOut className="w-5 h-5 shrink-0" />
                   <span>Sign Out</span>
                 </button>
               </SignOutButton>
+            </Show>
+            
+            <div className="px-3 pb-2">
+              <p className="text-[10px] text-muted-foreground/60">
+                © {new Date().getFullYear()} vikkmore.
+                <br />
+                All rights reserved.
+              </p>
             </div>
-          </Show>
+          </div>
         </div>
       </aside>
 
