@@ -46,7 +46,6 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }: SidebarProps) => {
   }, [activeView]);
 
   useEffect(() => {
-    // Check if app is already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true);
     }
@@ -67,155 +66,157 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }: SidebarProps) => {
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
-
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      setDeferredPrompt(null);
-    }
+    if (outcome === 'accepted') setDeferredPrompt(null);
   };
 
   return (
     <>
       <aside className={`
         /* Mobile: Top-down Drawer */
-        fixed top-16 left-0 right-0 z-50 bg-sidebar/95 backdrop-blur-xl
-        border-b border-white/10 transition-all duration-300 ease-in-out overflow-hidden
+        fixed top-16 left-0 right-0 z-50 bg-black/40 backdrop-blur-3xl
+        border-b border-white/5 transition-all duration-300 ease-in-out overflow-hidden
         ${isOpen ? "max-h-[80vh] opacity-100 visible" : "max-h-0 opacity-0 invisible md:visible"}
         
         /* Desktop: Standard Sidebar */
-        md:relative md:top-0 md:h-full md:max-h-none md:w-64 md:opacity-100 md:visible md:pointer-events-auto md:border-r md:border-b-0
+        md:relative md:top-0 md:h-full md:max-h-none md:w-[260px] md:opacity-100 md:visible md:pointer-events-auto md:border-r md:border-white/5 md:bg-white/[0.02]
       `}>
-        <div className="p-4 flex flex-col h-full max-w-2xl mx-auto md:max-w-none">
+        <div className="p-5 flex flex-col h-full max-w-2xl mx-auto md:max-w-none">
           {/* Logo - Desktop Only */}
-          <div className="hidden md:flex items-center gap-3 px-3 mb-8">
-            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
+          <div className="hidden md:flex items-center gap-3 px-3 mb-10">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
               <Music className="w-5 h-5" />
             </div>
-            <span className="font-bold text-xl tracking-tighter">vikkmore</span>
-          </div>
-          {/* Navigation */}
-          <nav className="space-y-1 mb-6">
-            <SidebarItem 
-              icon={Home} 
-              label="Home" 
-              active={activeView === "/home"} 
-              onClick={() => onNavigate("home")} 
-            />
-            <SidebarItem 
-              icon={Search} 
-              label="Search" 
-              active={activeView === "/search"} 
-              onClick={() => onNavigate("search")} 
-            />
-            <SidebarItem 
-              icon={User} 
-              label="Profile" 
-              active={activeView === "/profile"} 
-              onClick={() => onNavigate("profile")} 
-            />
-            <SidebarItem 
-              icon={Settings} 
-              label="API Settings" 
-              active={activeView === "/settings"} 
-              onClick={() => onNavigate("settings")} 
-            />
-            <SidebarItem 
-              icon={Info} 
-              label="About" 
-              active={activeView === "/about"} 
-              onClick={() => onNavigate("about")} 
-            />
-            
-            {/* Install App Button - Only show if not installed and prompt is available */}
-            {!isInstalled && deferredPrompt && (
-              <button
-                onClick={handleInstallClick}
-                className="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all bg-gradient-to-r from-primary/30 to-primary/20 text-primary hover:from-primary/40 hover:to-primary/30 border border-primary/40 hover:border-primary/60 shadow-lg hover:shadow-xl hover:scale-[1.02]"
-              >
-                <Download className="w-5 h-5 shrink-0" />
-                <div className="text-left">
-                  <div className="font-semibold">Install App</div>
-                  <div className="text-xs text-primary/80">Add to Home Screen</div>
-                </div>
-              </button>
-            )}
-          </nav>
-
-          {/* Library Section */}
-          <div className="flex-1 overflow-y-auto min-h-0">
-            <div className="flex items-center justify-between mb-2 px-3">
-              <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Library</span>
-              <div className="flex items-center gap-1">
-                <button onClick={() => setShowImport(true)} className="p-1 hover:text-white transition-colors">
-                  <Import className="w-4 h-4" />
-                </button>
-                <button onClick={() => setShowCreate(true)} className="p-1 hover:text-white transition-colors">
-                  <Plus className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            <SidebarItem 
-              icon={Heart} 
-              label="Liked Songs" 
-              active={activeView === "/liked"} 
-              onClick={() => onNavigate("liked")} 
-            />
-
-            <div className="mt-2 space-y-1">
-              {playlists.map((pl) => (
-                <button
-                  key={pl.id}
-                  onClick={() => onNavigate("playlist", pl.id)}
-                  className={`w-full px-3 py-2 rounded-md text-sm truncate flex items-center gap-3 transition-all ${
-                    activeView === `/playlist/${pl.id}`
-                      ? "bg-primary/20 text-primary font-medium"
-                      : "text-muted-foreground hover:bg-white/5"
-                  }`}
-                >
-                  <Music className="w-4 h-4 shrink-0" />
-                  <span className="truncate">{pl.name}</span>
-                </button>
-              ))}
-            </div>
+            <span className="font-bold text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">vikkmore</span>
           </div>
 
-          {/* Sidebar Footer */}
-          <div className="pt-4 mt-4 border-t border-white/10 shrink-0 space-y-4">
-            <div className="px-3 py-2">
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-2">Developed By</p>
-              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-                  <User className="w-3.5 h-3.5 text-primary" />
-                </div>
-                <span>Vatsal Koriya</span>
+          {/* Navigation Section */}
+          <div className="space-y-6 flex-1 overflow-y-auto scrollbar-none">
+            <section>
+              <h2 className="px-4 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50 mb-3">Explore</h2>
+              <div className="space-y-1">
+                <SidebarItem 
+                  icon={Home} 
+                  label="Listen Now" 
+                  active={activeView === "/home"} 
+                  onClick={() => onNavigate("home")} 
+                />
+                <SidebarItem 
+                  icon={Search} 
+                  label="Search" 
+                  active={activeView === "/search"} 
+                  onClick={() => onNavigate("search")} 
+                />
+                <SidebarItem 
+                  icon={User} 
+                  label="Profile" 
+                  active={activeView === "/profile"} 
+                  onClick={() => onNavigate("profile")} 
+                />
               </div>
-              <a 
-                href="mailto:vikkuploads@gmail.com" 
-                className="flex items-center gap-2 mt-2 text-xs text-muted-foreground hover:text-primary transition-colors group"
-              >
-                <Mail className="w-3.5 h-3.5" />
-                <span className="group-hover:underline">vikkuploads@gmail.com</span>
-              </a>
+            </section>
+
+            <section>
+              <div className="flex items-center justify-between px-4 mb-3">
+                <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50">Library</h2>
+                <div className="flex items-center gap-1.5">
+                  <button onClick={() => setShowImport(true)} className="p-1 text-muted-foreground/40 hover:text-white transition-colors" title="Import">
+                    <Import className="w-3.5 h-3.5" />
+                  </button>
+                  <button onClick={() => setShowCreate(true)} className="p-1 text-muted-foreground/40 hover:text-white transition-colors" title="Create">
+                    <Plus className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <SidebarItem 
+                  icon={Heart} 
+                  label="Liked Songs" 
+                  active={activeView === "/liked"} 
+                  onClick={() => onNavigate("liked")} 
+                />
+                <div className="pt-2 space-y-1">
+                  {playlists.map((pl) => (
+                    <button
+                      key={pl.id}
+                      onClick={() => onNavigate("playlist", pl.id)}
+                      className={`w-full px-4 py-2 rounded-xl text-sm truncate flex items-center gap-3 transition-all duration-200 group ${
+                        activeView === `/playlist/${pl.id}`
+                          ? "bg-primary/10 text-primary font-semibold shadow-inner"
+                          : "text-muted-foreground hover:bg-white/[0.05] hover:text-white"
+                      }`}
+                    >
+                      <Music className={`w-4 h-4 shrink-0 ${activeView === `/playlist/${pl.id}` ? "text-primary" : "text-muted-foreground/40 group-hover:text-white/60"}`} />
+                      <span className="truncate">{pl.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="px-4 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50 mb-3">Settings</h2>
+              <div className="space-y-1">
+                <SidebarItem 
+                  icon={Settings} 
+                  label="API Settings" 
+                  active={activeView === "/settings"} 
+                  onClick={() => onNavigate("settings")} 
+                />
+                <SidebarItem 
+                  icon={Info} 
+                  label="About" 
+                  active={activeView === "/about"} 
+                  onClick={() => onNavigate("about")} 
+                />
+                
+                {!isInstalled && deferredPrompt && (
+                  <button
+                    onClick={handleInstallClick}
+                    className="w-full flex items-center gap-3 px-4 py-3 mt-4 rounded-2xl text-sm font-medium transition-all bg-primary/10 text-primary hover:bg-primary/20 border border-primary/10"
+                  >
+                    <Download className="w-4 h-4 shrink-0" />
+                    <span>Install App</span>
+                  </button>
+                )}
+              </div>
+            </section>
+          </div>
+
+          {/* Sidebar Footer - Glassmorphic Card */}
+          <div className="mt-6 pt-6 border-t border-white/5 space-y-5">
+            <div className="px-4 py-4 rounded-2xl bg-white/[0.03] border border-white/5">
+              <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/40 font-bold mb-3">Credits</p>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border border-primary/10">
+                  <User className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-white/90">Vatsal Koriya</p>
+                  <a href="mailto:vikkuploads@gmail.com" className="text-[10px] text-muted-foreground hover:text-primary transition-colors block mt-0.5">
+                    vikkuploads@gmail.com
+                  </a>
+                </div>
+              </div>
             </div>
 
             <Show when="signed-in">
               <SignOutButton>
-                <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-destructive/90 hover:text-destructive hover:bg-destructive/10 transition-colors">
-                  <LogOut className="w-5 h-5 shrink-0" />
+                <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200">
+                  <LogOut className="w-4 h-4 shrink-0" />
                   <span>Sign Out</span>
                 </button>
               </SignOutButton>
             </Show>
             
-            <div className="px-3 pb-2">
-              <p className="text-[10px] text-muted-foreground/60">
-                © {new Date().getFullYear()} vikkmore.
-                <br />
-                All rights reserved.
+            <div className="px-4 flex items-center justify-between">
+              <p className="text-[10px] text-muted-foreground/30 font-medium tracking-tight">
+                © {new Date().getFullYear()} vikkmore
               </p>
+              <div className="flex gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500/40 animate-pulse" />
+              </div>
             </div>
           </div>
         </div>
@@ -238,11 +239,13 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }: SidebarProps) => {
 const SidebarItem = ({ icon: Icon, label, active, onClick }: any) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all ${
-      active ? "bg-white/10 text-white" : "text-muted-foreground hover:bg-white/5 hover:text-white"
+    className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
+      active 
+        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" 
+        : "text-muted-foreground hover:bg-white/[0.05] hover:text-white"
     }`}
   >
-    <Icon className="w-5 h-5 shrink-0" />
+    <Icon className={`w-4 h-4 shrink-0 ${active ? "text-primary-foreground" : "text-muted-foreground/40 group-hover:text-white/60"}`} />
     <span>{label}</span>
   </button>
 );
