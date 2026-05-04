@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Search, Heart, Plus, Settings, Import, Music, Download, User, LogOut, Info, Mail } from "lucide-react";
+import { Home, Search, Heart, Plus, Settings, Import, Music, Download, User, LogOut, Info, Mail, Menu } from "lucide-react";
 import { Show, SignOutButton } from "@clerk/nextjs";
 import { getPlaylists, subscribeToLibraryChanges, type Playlist } from "@/lib/storage";
 import { useState, useEffect } from "react";
@@ -86,7 +86,7 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }: SidebarProps) => {
           {/* Logo - Desktop Only */}
           <div className="hidden md:flex items-center gap-3 px-3 mb-10">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-              <Music className="w-5 h-5" />
+              <Menu className="w-5 h-5" />
             </div>
             <span className="font-bold text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">vikkmore</span>
           </div>
@@ -184,32 +184,8 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }: SidebarProps) => {
             </section>
           </div>
 
-          {/* Sidebar Footer - Glassmorphic Card */}
-          <div className="mt-6 pt-6 border-t border-white/5 space-y-5">
-            <div className="px-4 py-4 rounded-2xl bg-white/[0.03] border border-white/5">
-              <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/40 font-bold mb-3">Credits</p>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border border-primary/10">
-                  <User className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-white/90">Vatsal Koriya</p>
-                  <a href="mailto:vikkuploads@gmail.com" className="text-[10px] text-muted-foreground hover:text-primary transition-colors block mt-0.5">
-                    vikkuploads@gmail.com
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <Show when="signed-in">
-              <SignOutButton>
-                <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200">
-                  <LogOut className="w-4 h-4 shrink-0" />
-                  <span>Sign Out</span>
-                </button>
-              </SignOutButton>
-            </Show>
-            
+          {/* Sidebar Footer */}
+          <div className="mt-6 pt-6 border-t border-white/5">
             <div className="px-4 flex items-center justify-between">
               <p className="text-[10px] text-muted-foreground/30 font-medium tracking-tight">
                 © {new Date().getFullYear()} vikkmore
