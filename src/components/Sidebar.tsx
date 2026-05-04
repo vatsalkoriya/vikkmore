@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Search, Heart, Plus, Settings, Import, Music, Download, User, LogOut } from "lucide-react";
+import { Home, Search, Heart, Plus, Settings, Import, Music, Download, User, LogOut, Info, Mail } from "lucide-react";
 import { Show, SignOutButton } from "@clerk/nextjs";
 import { getPlaylists, subscribeToLibraryChanges, type Playlist } from "@/lib/storage";
 import { useState, useEffect } from "react";
