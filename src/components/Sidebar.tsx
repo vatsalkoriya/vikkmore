@@ -88,7 +88,13 @@ const Sidebar = ({ activeView, onNavigate, isOpen, onClose }: SidebarProps) => {
         md:relative md:top-0 md:h-full md:max-h-none md:w-64 md:opacity-100 md:visible md:pointer-events-auto md:border-r md:border-b-0
       `}>
         <div className="p-4 flex flex-col h-full max-w-2xl mx-auto md:max-w-none">
-          
+          {/* Logo - Desktop Only */}
+          <div className="hidden md:flex items-center gap-3 px-3 mb-8">
+            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
+              <Music className="w-5 h-5" />
+            </div>
+            <span className="font-bold text-xl tracking-tighter">vikkmore</span>
+          </div>
           {/* Navigation */}
           <nav className="space-y-1 mb-6">
             <SidebarItem 
